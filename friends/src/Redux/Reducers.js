@@ -5,15 +5,20 @@ import {
 
     LOGIN_START,
     LOGIN_SUCCESS,
-    LOGIN_FAIL
+    LOGIN_FAIL,
+
+    LOGOUT,
+
+    ADD_FRIEND_SUCCESS,
+    ADD_FRIEND_ERROR
 } from './Actions';
 
 const initState = {
     fetchingFriends: false,
     loggingIn: false,
     user: {
-        token: null,
-        username: '',
+        token: localStorage.getItem('token') || null,
+        username: localStorage.getItem('username') || '',
     },
     friends: [],
     errorCode: NaN,
@@ -62,6 +67,32 @@ export default (state = initState, action) => {
             return {
                 ...state,
                 loggingIn: false,
+                errorCode: action.payload.code,
+                errorMessage: action.payload.message
+            }
+        case LOGOUT:
+            return {
+                ...state,
+                user: {
+                    token: null,
+                    username: '',
+                },
+                errorCode: NaN,
+                errorMessage: ''
+            }
+        case ADD_FRIEND_SUCCESS:
+            return {
+                ...state,
+                errorCode: NaN,
+                errorMessage: '',
+                friends: [
+                    ...state.friends,
+                    ...action.payload,
+                ]
+            }
+        case ADD_FRIEND_ERROR:
+            return {
+                ...state,
                 errorCode: action.payload.code,
                 errorMessage: action.payload.message
             }

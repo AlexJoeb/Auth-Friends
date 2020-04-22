@@ -1,23 +1,29 @@
-import React, {useEffect} from 'react';
-import { fetchFriends, login } from './Redux/Actions';
-import { connect } from 'react-redux';
+import React from 'react';
 
-function App({ user, fetchFriends, login }) {
-  useEffect(() => {
-    console.log(user);
-  }, [user])
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Redirect
+} from 'react-router-dom';
+
+import Login from './Pages/Login';
+import Dashboard from './Pages/Dashboard';
+
+import PrivateRoute from './Components/PrivateRoute';
+
+function App() {
   return (
     <div className="app">
-      <button onClick={() => {
-        login('Lambda School', 'i<3Lambd4');
-      }}>Test Fetch Friends</button>
+      <Router>
+        <Switch>
+          <Route exact path='/' render={props => <Redirect to='/login' />} />
+          <Route path='/login' render={props => <Login />} />
+          <PrivateRoute path='/dashboard' component={ Dashboard } />
+        </Switch>
+      </Router>
     </div>
   );
 }
 
-export default connect(({ user }) => ({
-  user
-}), {
-  fetchFriends,
-  login
-})(App);
+export default App;
